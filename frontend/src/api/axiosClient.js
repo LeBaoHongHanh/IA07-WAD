@@ -2,9 +2,7 @@ import axios from 'axios';
 import { tokenService } from '../services/tokenService';
 import { handleApiError } from '../utils/handleApiError';
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ??
-  (import.meta.env.DEV ? 'http://localhost:4000' : '');
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
@@ -38,8 +36,9 @@ async function refreshAccessToken() {
     throw new Error('No refresh token');
   }
 
+  const base = API_BASE_URL || '';
   refreshPromise = axios
-    .post('http://localhost:4000/auth/refresh', { refreshToken })
+    .post(`${base}/auth/refresh`, { refreshToken })
     .then((res) => {
       const newAccessToken = res.data.accessToken;
       tokenService.setAccessToken(newAccessToken);
